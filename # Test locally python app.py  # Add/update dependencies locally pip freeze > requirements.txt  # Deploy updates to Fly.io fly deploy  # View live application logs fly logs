@@ -1,0 +1,22 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route("/api/verify-payment", methods=["POST"])
+def verify_payment():
+    data = request.get_json() or {}
+    tx_id = data.get("trx_id")
+    mfs_provider = data.get("provider")  # 'bkash', 'nagad', 'rocket'
+
+    if not tx_id:
+        return jsonify({
+            "status": "error",
+            "message": "Transaction ID (TxID) is required for verification."
+        }), 400
+
+    # Business logic to verify TxID with MFS provider or database
+    return jsonify({
+        "status": "success",
+        "message": f"Transaction {tx_id} received via {mfs_provider}. Verification in progress.",
+        "trx_id": tx_id
+    })
